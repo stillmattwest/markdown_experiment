@@ -1,34 +1,55 @@
 function convertMarkdown(txt) {
   const lines = txt.split("\r");
   // return an array of HTML elements
-  const result = [];
+  let result = [];
+  let codeBlock = "";
+  let inBlock = false;
   for (let line of lines) {
-    let prefix = getPrefix(line);
-    switch (prefix) {
-      case "#":
-        result.push(`<h1>${line.slice(1, -1)}</h1>`);
-        break;
-      case "##":
-        result.push(`<h2>${line.slice(2, -1)}</h2>`);
-      case "```":
-        result.push(`<codeblock>${line.slice(3, -1)}</codeblock>`);
-      default:
-        result.push(`<p>${line}</p>`);
+    let lineData = getLineData(line);
+    console.log("lineData.prefix: ", lineData.prefix);
+    console.log("lineData.content: ", lineData.content);
+    if (lineData.prefix === "#") {
+      result.push(`<h1>${lineData.content}</h1>`);
+    } else if (lineData.prefix === "##") {
+      result.push(`<h2>${lineData.content}</h2>`);
+    } else if (lineData.prefix === "```") {
+      // check to see if we're already in a codeblock. If so, switch inBlock to false
+      // then add a div containing codeblock to result
+      // then set codeblock to empty string
+      if (inBlock) {
+        inBlock = false;
+        result.push(`<div class = "codeblock">${codeBlock}</div>`);
+        codeBlock = "";
+      } else {
+        // new codeblock. Set inBlock to true
+        let inBlock = true;
+      }
+    } else {
+      if (inBlock) {
+        // add content to codeblock
+        codeBlock += `${lineData.content}\r`;
+      } else {
+        // not in codeblock so regular paragraph text
+        result.push(`<p>${lineData.content}</p>`);
+      }
     }
   }
   return result;
 }
 
-function getPrefix(line) {
+function getLineData(line) {
   // takes a line of text and gets all prefix characters until is reaches a letter or number
   // returns prefix as a string
-  let result = "";
+  let result = {
+    prefix: "",
+    content: "",
+  };
   for (let i = 0; i < line.length; i++) {
     let c = line[i];
-    if (!c.toLowerCase().match(/\w/)) {
-      result += c;
+    if (!c.toLowerCase().match(/[\w/ <>]/)) {
+      result.prefix += c;
     } else {
-      return result;
+      result.content += c;
     }
   }
   return result;
