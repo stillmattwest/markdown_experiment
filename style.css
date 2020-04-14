@@ -1,0 +1,27 @@
+.container {
+  width: 80%;
+  margin: auto;
+  text-align: center;
+}
+
+.big-area {
+  height: 600px;
+  width: 400px;
+  border: 1px solid silver;
+  display: inline-block;
+  vertical-align: top;
+}
+
+#markdown-input {
+  width: 95%;
+  height: 80%;
+  border: 1px solid silver;
+}
+
+.button-group {
+  padding-top: 25px;
+}
+
+#html-display {
+  text-align: left;
+}
