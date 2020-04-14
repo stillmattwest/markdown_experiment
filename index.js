@@ -1,13 +1,11 @@
+let inBlock = false;
 function convertMarkdown(txt) {
   const lines = txt.split("\r");
   // return an array of HTML elements
   let result = [];
   let codeBlock = "";
-  let inBlock = false;
   for (let line of lines) {
     let lineData = getLineData(line);
-    console.log("lineData.prefix: ", lineData.prefix);
-    console.log("lineData.content: ", lineData.content);
     if (lineData.prefix === "#") {
       result.push(`<h1>${lineData.content}</h1>`);
     } else if (lineData.prefix === "##") {
@@ -18,15 +16,15 @@ function convertMarkdown(txt) {
       // then set codeblock to empty string
       if (inBlock) {
         inBlock = false;
-        result.push(`<div class = "codeblock">${codeBlock}</div>`);
+        result.push(`<div class="codeblock">${codeBlock}</div>`);
         codeBlock = "";
       } else {
         // new codeblock. Set inBlock to true
-        let inBlock = true;
+        inBlock = true;
       }
     } else {
       if (inBlock) {
-        // add content to codeblock
+        // Incoming content without a prefix is part of a block. Add to codeblock
         codeBlock += `${lineData.content}\r`;
       } else {
         // not in codeblock so regular paragraph text
@@ -40,15 +38,17 @@ function convertMarkdown(txt) {
 function getLineData(line) {
   // takes a line of text and gets all prefix characters until is reaches a letter or number
   // returns prefix as a string
+  let thePrefixIsIn = false;
   let result = {
     prefix: "",
     content: "",
   };
   for (let i = 0; i < line.length; i++) {
     let c = line[i];
-    if (!c.toLowerCase().match(/[\w/ <>]/)) {
+    if (!c.toLowerCase().match(/[\w/ <>]/) && !thePrefixIsIn) {
       result.prefix += c;
     } else {
+      thePrefixIsIn = true;
       result.content += c;
     }
   }
