@@ -56,7 +56,8 @@ function getLineData(line) {
 }
 
 let markdownArea = document.getElementById("markdown-input");
-markdownArea.defaultValue = "#Heading\n##Subheading\nNormal Text";
+markdownArea.defaultValue =
+  "#Heading\n##Subheading\nNormal Text\n```html\n<h1>Heading</h1>\n<h2>Subheading</h2>\n```\nMore Normal Text";
 
 function convert() {
   let markdownArea = document.getElementById("markdown-input");
