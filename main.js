@@ -16,7 +16,9 @@ function convertMarkdown(txt) {
       // then set codeblock to empty string
       if (inBlock) {
         inBlock = false;
-        result.push(`<div class="codeblock">${codeBlock}</div>`);
+        result.push(
+          `<div class="codeblock">\n<pre>\n<code class="html">${codeBlock}</code></pre></div>\n`
+        );
         codeBlock = "";
       } else {
         // new codeblock. Set inBlock to true
@@ -28,7 +30,7 @@ function convertMarkdown(txt) {
         codeBlock += `${lineData.content}\n`;
       } else {
         // not in codeblock so regular paragraph text
-        result.push(`<p>${lineData.content}</p>`);
+        result.push(`<p>${lineData.content}</p>\n`);
       }
     }
   }
@@ -57,13 +59,14 @@ function getLineData(line) {
 
 let markdownArea = document.getElementById("markdown-input");
 markdownArea.defaultValue =
-  "#Heading\n##Subheading\nNormal Text\n```html\n<h1>Heading</h1>\n<h2>Subheading</h2>\n```\nMore Normal Text";
+  "#Heading\n##Subheading\nNormal Text\n```html\n<h1>Heading Example</h1>\n<h2>Subheading Example</h2>\n```\nMore Normal Text";
 
 function convert() {
   let markdownArea = document.getElementById("markdown-input");
   let md = markdownArea.value;
   let convertedHtmlArray = convertMarkdown(md);
   let htmlDisplay = document.getElementById("html-display");
+  htmlDisplay.innerHTML = "";
   convertedHtmlArray.forEach((line) => {
     let currentVal = htmlDisplay.innerHTML;
     htmlDisplay.innerHTML = currentVal + line;
