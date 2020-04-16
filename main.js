@@ -20,7 +20,7 @@ function convertMarkdown(txt) {
         codeBlock.content = codeBlock.content.replace(/>/g, "&gt;");
         console.log("codeblock.content: ", codeBlock.content);
         result.push(
-          `<div class="codeblock" data-format=${codeBlock.format}>\n<pre>\n<code class="html">${codeBlock.content}\n</code>\n</pre>\n</div>\n`
+          `<div class="codeblock">\n<pre>\n<code class=${codeBlock.format} style="darcula">${codeBlock.content}\n</code>\n</pre>\n</div>\n`
         );
       } else {
         // new codeblock. Set inBlock to true
@@ -65,7 +65,7 @@ function getLineData(line) {
 
 let markdownArea = document.getElementById("markdown-input");
 markdownArea.defaultValue =
-  "#Heading\n##Subheading\nNormal Text\n```html\n<h1>Heading Example</h1>\n<h2>Subheading Example</h2>\n```\nMore Normal Text";
+  "#Heading\n##Subheading\nNormal Text\n##Example Codeblock\n```html\n<h1>Heading Example</h1>\n<h2>Subheading Example</h2>\n```\nMore Normal Text";
 
 function convert() {
   let markdownArea = document.getElementById("markdown-input");
@@ -79,7 +79,7 @@ function convert() {
     let currentVal = htmlDisplay.innerHTML;
     htmlDisplay.innerHTML = currentVal + line;
   });
+  // from highlight.js script in index.html
+  hljs.initHighlighting.called = false;
+  hljs.initHighlighting();
 }
-
-// const markdownText =
-//   "#Basic HTML\nThe key to writing basic HTML is basically just to learn a bunch of tags and then write them. A browser will render the text as a formatted web page.\nExample:\n```html\n<h1>This is a big heading</h1>\n<h2>This is a small heading</h2>\n<p>This is some normal paragraph text. It is common for paragraph text to be long but usually no more than (...wait for it...) a single paragraph</p>\n```\n##Headings\nYep, you'll need these, they are important. You'll find headings at the head of each section you write. Get it? Heading? Head? So awesome, glad we're all on the same page.\n##Parapgrah Text\nYep, you will need this too. Paragraph text may be boring but when you go to a website what would you guess people spend the most time looking at? If you guessed \"paragraph text\" you are *almost* right. It's actually videos of people and cats doing stupid stuff. Paragraph text is second longest.";
