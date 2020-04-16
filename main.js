@@ -16,18 +16,24 @@ function convertMarkdown(txt) {
       // then set codeblock to empty string
       if (inBlock) {
         inBlock = false;
+        codeBlock.content = codeBlock.content.replace(/</g, "&lt;");
+        codeBlock.content = codeBlock.content.replace(/>/g, "&gt;");
+        console.log("codeblock.content: ", codeBlock.content);
         result.push(
-          `<div class="codeblock">\n<pre>\n<code class="html">${codeBlock}</code></pre></div>\n`
+          `<div class="codeblock" data-format=${codeBlock.format}>\n<pre class="html">${codeBlock.content}\n</pre>\n</div>\n`
         );
-        codeBlock = "";
       } else {
         // new codeblock. Set inBlock to true
         inBlock = true;
+        codeBlock = {
+          format: `${lineData.content}`,
+          content: "",
+        };
       }
     } else {
       if (inBlock) {
         // Incoming content without a prefix is part of a block. Add to codeblock
-        codeBlock += `${lineData.content}\n`;
+        codeBlock.content += `${lineData.content}\n`;
       } else {
         // not in codeblock so regular paragraph text
         result.push(`<p>${lineData.content}</p>\n`);
@@ -66,8 +72,10 @@ function convert() {
   let md = markdownArea.value;
   let convertedHtmlArray = convertMarkdown(md);
   let htmlDisplay = document.getElementById("html-display");
+  let inBlock = false;
   htmlDisplay.innerHTML = "";
   convertedHtmlArray.forEach((line) => {
+    // debugger;
     let currentVal = htmlDisplay.innerHTML;
     htmlDisplay.innerHTML = currentVal + line;
   });
