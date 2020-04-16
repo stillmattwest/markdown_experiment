@@ -20,7 +20,7 @@ function convertMarkdown(txt) {
         codeBlock.content = codeBlock.content.replace(/>/g, "&gt;");
         console.log("codeblock.content: ", codeBlock.content);
         result.push(
-          `<div class="codeblock" data-format=${codeBlock.format}>\n<pre class="html">${codeBlock.content}\n</pre>\n</div>\n`
+          `<div class="codeblock" data-format=${codeBlock.format}>\n<pre>\n<code class="html">${codeBlock.content}\n</code>\n</pre>\n</div>\n`
         );
       } else {
         // new codeblock. Set inBlock to true
